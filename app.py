@@ -1,13 +1,15 @@
 from flask import Flask
 from faker import Faker
-import csv
+from csv import reader
 from tabulate import tabulate
-import requests
+from requests import get
+from base58 import b58encode, b58decode
 
 app = Flask(__name__)
 
 
-@app.route('/generate-users/<int:countOfUsers>/') # http://127.0.0.1:5000/generate-users/5/ #TODO удалить
+
+@app.route('/generate-users/<int:countOfUsers>/')  # http://127.0.0.1:5000/generate-users/5/ #TODO удалить
 def generate_users(countOfUsers):
     userData = []
     userInfo = ['Name', 'E-mail']
@@ -24,7 +26,7 @@ def analize_csv():
     SummOfWeights = 0
     count = 0
     with open('static/hw05.csv', encoding='utf-8') as r_file:
-        file_reader = csv.reader(r_file, delimiter=',')
+        file_reader = reader(r_file, delimiter=',')
         for row in file_reader:
             if count != 0:
                 SummOfHeights += float(row[1])
@@ -35,10 +37,21 @@ def analize_csv():
                f'Average height: {round(SummOfHeights / (count - 1), 2)} cm<br>' \
                f'Average weight: {round(SummOfWeights / (count - 1), 2)} kg<br>'
 
-@app.route('/space/') #http://127.0.0.1:5000/space/
+
+@app.route('/space/')  # http://127.0.0.1:5000/space/ #TODO удалить
 def output_space_information():
-    r = requests.get('http://api.open-notify.org/astros.json')
-    return f"Number of astronauts: { r.json()['number']}"
+    r = get('http://api.open-notify.org/astros.json')
+    return f"Number of astronauts: {r.json()['number']}"
+
+
+@app.route('/base58encode/<string:s>/')
+def encode_base58(s):
+    return b58encode(s)
+
+
+@app.route('/base58decode/<string:s>/')
+def decode_base58(s):
+    return b58decode(s)
 
 
 if __name__ == '__main__':
