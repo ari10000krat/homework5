@@ -1,6 +1,7 @@
 from flask import Flask
 from faker import Faker
 import csv
+from tabulate import tabulate
 
 app = Flask(__name__)
 
@@ -8,13 +9,15 @@ app = Flask(__name__)
 @app.route('/generate-users/<int:countOfUsers>/')
 def generate_users(countOfUsers):  # http://127.0.0.1:5000/generate-users/5/ #TODO удалить
     userData = []
+    userInfo = ['Name', 'E-mail']
     fake = Faker(['ru_RU'])
     for i in range(countOfUsers):
         userData.append([fake.first_name(), fake.email()])
-    return str(userData)
+    table = tabulate(userData, userInfo, tablefmt='grid')
+    return f'<pre>{table}<pre>'
 
 
-@app.route('/mean/')#http://127.0.0.1:5000/mean/ #TODO удалить
+@app.route('/mean/')  # http://127.0.0.1:5000/mean/ #TODO удалить
 def analize_csv():
     SummOfHeights = 0
     SummOfWeights = 0
