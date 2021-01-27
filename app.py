@@ -47,7 +47,7 @@ def analize_csv():
                    f'Total values in file (strings of data): {count - 1}\n' \
                    f'Average height: {round(SummOfHeights / (count - 1) * 2.54, 2)} cm\n' \
                    f'Average weight: {round(SummOfWeights / (count - 1) * 2.2, 2)} kg\n</pre>'
-    except:
+    except FileExistsError:
         return 'No such file exists'
 
 
